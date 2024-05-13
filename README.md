@@ -26,7 +26,7 @@ Duration: 2 hours
 ## Endpoints
 # Create User
 Method: POST
-URL: /user
+URL: `/user`
 Request Body: 
   - name
   - email
@@ -36,19 +36,19 @@ Description: Creates a new user.
 
 # Get User
 Method: GET
-URL: /user/:id
+URL: `/user/:id`
 Request Params: id (User ID)
 Description: Retrieves information about a user.
 
 # Remove User
 Method: DELETE
-URL: /user/:id
+URL: `/user/:id`
 Request Params: id (User ID)
 Description: Deletes a user.
 
 # Update User
 Method: PUT
-URL: /user/:id
+URL: `/user/:id`
 Request Params: id (User ID)
 Request Body:
   - name
@@ -59,13 +59,13 @@ Description: Updates user information.
 
 # Follow User
 Method: POST
-URL: /user/:followerId/follow
+URL: `/user/:followerId/follow`
 Request Body and Params: FollowUserDto, followerId (Follower's ID)
 Description: Allows a user to follow another user.
 
 # Create Media
 Method: POST
-URL: /user/:userId/media
+URL: `/user/:userId/media`
 Request Params: userId (User ID)
 Request Body: 
   - title
@@ -75,13 +75,13 @@ Description: Uploads media for a user.
 
 # Remove Media
 Method: DELETE
-URL: /user/:userId/media/:id
+URL: `/user/:userId/media/:id`
 Request Params: userId (User ID), id (Media ID)
 Description: Deletes media associated with a user.
 
 # Update Media
 Method: PUT
-URL: /user/:userId/media
+URL: `/user/:userId/media`
 Request Body and Params: userId (User ID)
 Request Body: 
   - title
@@ -91,7 +91,7 @@ Description: Updates media information.
 
 # Get Feed
 Method: GET
-URL: /user/:id/feed?offset=20&limit=10
+URL: `/user/:id/feed?offset=20&limit=10`
 Request Params: id (User ID)
 Request Query: id (User ID), limit (Pagination Limit), offset (Pagination Offset)
 Description: Retrieves the feed for a user with pagination support.
