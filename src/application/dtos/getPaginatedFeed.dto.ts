@@ -1,15 +1,11 @@
-import { IsDefined, IsNumber } from "class-validator";
+import { IsDefined, IsNumber, IsOptional } from "class-validator";
 
 export class GetPaginatedFeedDto {
   @IsNumber()
-  @IsDefined()
-  userId: number;
+  @IsOptional()
+  limit: number = 10;
 
   @IsNumber()
-  @IsDefined()
-  limit: number;
-
-  @IsNumber()
-  @IsDefined()
-  offset: number;
+  @IsOptional()
+  offset: number = 0;
 }

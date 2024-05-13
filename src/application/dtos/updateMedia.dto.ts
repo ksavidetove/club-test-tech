@@ -18,4 +18,8 @@ export class UpdateMediaDto {
   @IsString()
   @IsOptional()
   description: string;
+
+  @IsNumber()
+  @IsDefined()
+  userId: number;
 }

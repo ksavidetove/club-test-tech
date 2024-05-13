@@ -6,6 +6,9 @@ import {
   Param,
   Post,
   Put,
+  Query,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 
 import { UserService } from 'src/domain/services/user.service';
@@ -74,8 +77,8 @@ export default class UserController {
     await this.mediaService.update(updateMediaDto);
   }
 
-  @Get(':userId/feed/')
-  async getFeed(@QueryAndParam() getPaginatedFeedDto :GetPaginatedFeedDto) {
-    return this.userService.getFeed(getPaginatedFeedDto.userId, getPaginatedFeedDto.limit, getPaginatedFeedDto.offset);
+  @Get(':id/feed')
+  async getFeed(@Param() userDto: DeleteUserDto, @Query() getPaginatedFeedDto :GetPaginatedFeedDto) {
+    return this.userService.getFeed(userDto.id, getPaginatedFeedDto.limit, getPaginatedFeedDto.offset);
   }
 }

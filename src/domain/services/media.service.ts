@@ -15,6 +15,9 @@ export class MediaService {
   ) {}
   
   async create(media: CreateMediaDto): Promise<Media> {
+    const newMedia = await this.mediasRepository.save(media);
+
+    await this.subscriptionRepository.update({followingId: media.userId}, {lastMediaId: newMedia.id, lastMediaViewed: false});
     return this.mediasRepository.save(media);
   }
 
@@ -27,8 +30,7 @@ export class MediaService {
     if (!media) {
       throw new Error('Media not found');
     }
-
-    await this.subscriptionRepository.update(media.user.id, {lastMediaId: media.id, lastMediaViewed: false});
+    await this.subscriptionRepository.update({followingId: updateMedia.userId}, {lastMediaId: media.id, lastMediaViewed: false});
     return this.mediasRepository.update(media.id, {...media, ...updateMedia});
   }
 }

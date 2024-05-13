@@ -1,5 +1,4 @@
-import { Entity, Column, CreateDateColumn, Index, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
-import { Media } from './media.entity';
+import { Entity, Column, Index, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 @Index(['followerId', 'followingId'], { unique: true })
@@ -14,8 +13,10 @@ export class Subscription {
   @Column()
   followingId: number;
 
-  @Column()
-  lastMediaId: number;
+  @Column({
+    nullable: true,
+  })
+  lastMediaId?: number | null;
 
   @Column()
   lastMediaViewed: boolean = false;

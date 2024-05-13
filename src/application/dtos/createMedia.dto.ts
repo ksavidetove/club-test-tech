@@ -1,10 +1,6 @@
 import { IsDefined, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateMediaDto {
-  @IsNumber()
-  @IsDefined()
-  id: number;
-
   @IsString()
   @IsDefined()
   @IsNotEmpty()

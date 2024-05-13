@@ -24,7 +24,7 @@ export class UserService {
   async findOne(id: number): Promise<User> {
     return this.usersRepository.findOne({where: {id}});
   }
-  
+
   async delete(id: number) {
     return this.usersRepository.delete(id);
   }
@@ -41,11 +41,13 @@ export class UserService {
       throw new Error('User not found');
     }
 
+    const lastMediaId = this.mediasRepository.find({where: {user: {id: followingId}}, order: {updatedAt: 'DESC'}, take: 1});
+
     const subscriptionExists = await this.subscriptionRepository.exists({where: {followerId, followingId}});
 
     if (subscriptionExists) return;
 
-    await this.subscriptionRepository.save({followerId, followingId});
+    await this.subscriptionRepository.save({followerId, followingId, lastMediaId, lastMediaViewed: false} as any);
   }
 
   async getFeed(userId: number, limit: number, offset: number) {
@@ -57,6 +59,8 @@ export class UserService {
     const subscriptions = await this.subscriptionRepository.find({where: {followerId: userId, lastMediaViewed: false}, skip: offset, take: limit});
     const medias = subscriptions.map(subscription => subscription.lastMediaId);
 
-    return this.mediasRepository.find({where: {user: In(medias)}});
+    await this.subscriptionRepository.update({followerId: user.id}, {lastMediaViewed: true});
+
+    return this.mediasRepository.find({where: {id: In(medias)}});
   }
 }

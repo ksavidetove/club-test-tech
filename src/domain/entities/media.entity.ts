@@ -1,5 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, Index, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, ManyToOne } from 'typeorm';
 import { User } from './user.entity';
+
 
 @Entity()
 export class Media {
@@ -14,6 +15,12 @@ export class Media {
 
   @Column()
   description: string;
+
+  @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)" })
+  public createdAt: Date;
+  
+  @UpdateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)", onUpdate: "CURRENT_TIMESTAMP(6)" })
+  public updatedAt: Date;
 
   @ManyToOne(() => User, (user: User) => user.medias)
   public user: User;
