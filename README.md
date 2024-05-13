@@ -5,7 +5,7 @@ Duration: 2 hours
 1. Clone this repository:
   ```bash
     git clone https://github.com/ksavidetove/club-test-tech
-    cd Palette
+    cd club-test-tech
   ```
 
 2. Install the dependancies
