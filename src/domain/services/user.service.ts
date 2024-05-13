@@ -4,7 +4,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { Subscription } from '../entities/subscription.entity';
 import { Media } from '../entities/media.entity';
-import { CreateUserDto } from 'src/application/dtos';
+import { CreateUserDto, PaginatedFeedDto } from 'src/application/dtos';
+import { GetPaginatedFeedDto } from '../../application/dtos/getPaginatedFeed.dto';
 
 @Injectable()
 export class UserService {
@@ -41,26 +42,37 @@ export class UserService {
       throw new Error('User not found');
     }
 
-    const lastMediaId = this.mediasRepository.find({where: {user: {id: followingId}}, order: {updatedAt: 'DESC'}, take: 1});
+    const lastMedia: Media | null = await this.mediasRepository.findOne({where: {user: {id: followingId}}, order: {updatedAt: 'DESC'}});
 
     const subscriptionExists = await this.subscriptionRepository.exists({where: {followerId, followingId}});
 
     if (subscriptionExists) return;
 
-    await this.subscriptionRepository.save({followerId, followingId, lastMediaId, lastMediaViewed: false} as any);
+    await this.subscriptionRepository.save({followerId, followingId, lastMediaId: lastMedia?.id, lastMediaViewed: false} as any);
   }
 
-  async getFeed(userId: number, limit: number, offset: number) {
+  async getFeed(userId: number, limit: number, offset: number): Promise<PaginatedFeedDto> {
     const user = await this.usersRepository.findOne({where: {id: userId}});
     if (!user) {
       throw new Error('User not found');
     }
 
-    const subscriptions = await this.subscriptionRepository.find({where: {followerId: userId, lastMediaViewed: false}, skip: offset, take: limit});
-    const medias = subscriptions.map(subscription => subscription.lastMediaId);
+    const [subscriptions, count] = await this.subscriptionRepository.findAndCount({
+      where: {followerId: userId, lastMediaViewed: false},
+      skip: offset,
+      take: limit
+    });
+    const mediaIds = subscriptions.map(subscription => subscription.lastMediaId);
 
     await this.subscriptionRepository.update({followerId: user.id}, {lastMediaViewed: true});
 
-    return this.mediasRepository.find({where: {id: In(medias)}});
+    const medias = await this.mediasRepository.find({where: {id: In(mediaIds)}});
+    const result = new PaginatedFeedDto();
+    result.limit = limit;
+    result.offset = offset;
+    result.total = count;
+    result.results = medias;
+
+    return result
   }
 }

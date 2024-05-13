@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 
 import { UserService } from 'src/domain/services/user.service';
-import { CreateMediaDto, CreateUserDto, DeleteMediaDto, DeleteUserDto, FollowUserDto, GetPaginatedFeedDto, UpdateMediaDto, UpdateUserDto } from '../dtos';
+import { CreateMediaDto, CreateUserDto, DeleteMediaDto, DeleteUserDto, FollowUserDto, GetPaginatedFeedDto, PaginatedFeedDto, UpdateMediaDto, UpdateUserDto } from '../dtos';
 import { User } from 'src/domain/entities/user.entity';
 import { BodyAndParam } from '../decorators/BodyAndParam.decorator';
 import { Media } from 'src/domain/entities/media.entity';
@@ -68,7 +68,7 @@ export default class UserController {
     await this.mediaService.delete(deleteMediaDto.id);
   }
 
-  @Put(':userId/media')
+  @Put(':userId/media/:id')
   async updateMedia(
     @BodyAndParam() updateMediaDto: UpdateMediaDto,
   ) {
@@ -76,7 +76,7 @@ export default class UserController {
   }
 
   @Get(':id/feed')
-  async getFeed(@Param() userDto: DeleteUserDto, @Query() getPaginatedFeedDto :GetPaginatedFeedDto) {
+  async getFeed(@Param() userDto: DeleteUserDto, @Query() getPaginatedFeedDto :GetPaginatedFeedDto): Promise<PaginatedFeedDto> {
     return this.userService.getFeed(userDto.id, getPaginatedFeedDto.limit, getPaginatedFeedDto.offset);
   }
 }

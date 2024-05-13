@@ -31,6 +31,6 @@ export class MediaService {
       throw new Error('Media not found');
     }
     await this.subscriptionRepository.update({followingId: updateMedia.userId}, {lastMediaId: media.id, lastMediaViewed: false});
-    return this.mediasRepository.update(media.id, {...media, ...updateMedia});
+    return this.mediasRepository.update(media.id, {user: {id: updateMedia.id}, ...media, ...updateMedia});
   }
 }

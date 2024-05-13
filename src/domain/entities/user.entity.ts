@@ -18,6 +18,6 @@ export class User {
   @Column()
   picture: string;
 
-  @OneToMany(() => Media, (media: Media) => media.user)
+  @OneToMany(() => Media, (media: Media) => media.user, { cascade: true })
   public medias?: Media[];
 }
